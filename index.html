@@ -79,8 +79,23 @@
         [0, 1], [1, 2], [2, 3], [3, 0], // back face
         [4, 5], [5, 6], [6, 7], [7, 4], // front face
         [0, 4], [1, 5], [2, 6], [3, 7], // connecting sides
+        
     ];
-    
+
+    const otherEdges=[
+        [0, 7],
+        [1, 6],
+        [2, 5],
+        [3, 4],
+        [2, 7],
+        [3, 6],
+        [0, 5],
+        [1, 4]
+    ]
+
+    function distance(x1, y1, x2, y2) {
+        return Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1));
+    }
     
     // set up the animation loop
     var timeDelta, timeLast = 0;
@@ -133,7 +148,19 @@
             ctx.beginPath();
             ctx.moveTo(vertices[edge[0]].x, vertices[edge[0]].y);
             ctx.lineTo(vertices[edge[1]].x, vertices[edge[1]].y);
+            if(distance(vertices[edge[0]].x, vertices[edge[0]].y, vertices[edge[1]].x, vertices[edge[1]].y) < 100){
+                ctx.strokeStyle = color[Math.floor(Math.random()*color.length)];
+            }
             ctx.stroke();
+        }
+
+        for (let edge of otherEdges) {
+            if(distance(vertices[edge[0]].x, vertices[edge[0]].y, vertices[edge[1]].x, vertices[edge[1]].y) < 400){
+                ctx.beginPath();
+                ctx.moveTo(vertices[edge[0]].x, vertices[edge[0]].y);
+                ctx.lineTo(vertices[edge[1]].x, vertices[edge[1]].y);
+                ctx.stroke();
+            }
         }
 
         // call the next frame
@@ -142,6 +169,8 @@
     function playMusic(){
         var audio = new Audio('./music.mp3');
         audio.play();
+        audio.loop = true;
+        audio.volume = 0.1;
     }
     document.addEventListener('click', playMusic);
 </script>
